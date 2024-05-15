@@ -14,7 +14,9 @@
 </body>
 <script type="module">
   import { initASWebGLue, ASWebGLReady } from '/ASWebGLue2.js';
+
   const wasm_file = 'madengine.wasm';
+
   var exports;
   var last_time = 0;
   var w = window.innerWidth * 0.99;
@@ -43,6 +45,11 @@
     requestAnimationFrame(renderFrame);
 
   }
+
+
+
+
+
 
   const memory = new WebAssembly.Memory({ initial: 100 }); // linear memory
 

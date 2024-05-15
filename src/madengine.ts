@@ -13,16 +13,25 @@ import {
   WebGLTexture,
 } from './WebGL';
 
+import { getQuad } from './quad';
+
 const VERTEX_SHADER_CODE: string = `#version 300 es
   precision highp float;
 
   in vec2 position;
   in vec2 tex_coord;
 
+mat4 projection = mat4(1.3737387097273113,0.0,0.0,0.0,0.0,1.3737387097273113,0.0,0.0,0.0,0.0,-1.02020202020202,-1.0,0.0,0.0,-2.0202020202020203,0.0);
+mat4 camera = mat4(1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,-1.100090086,1.0);
+mat4 model = mat4(1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0);
+
+  uniform mat4 perspective;
+
   out vec2 tc;
 
   void main() {
-    gl_Position = vec4(position, 0.0, 1.0);
+    //vec4 pos = perspective*vec4(vec3(position,0.0),1.0);
+    gl_Position = projection*camera*model*vec4(vec3(position,0.0),1.0);
     tc = tex_coord;
   }
 `;
@@ -77,28 +86,13 @@ gl.enableVertexAttribArray(tex_coord_al);
 gl.enable(gl.BLEND);
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-let quad_data: StaticArray<f32> = [
-  //  x     y     u     v
-  -0.15,
-  -0.2,
-  0.0,
-  0.0,
-  -0.15,
-  0.2,
-  0.0,
-  0.99,
-  0.15,
-  -0.2,
-  0.95,
-  0.0,
-  0.15,
-  0.2,
-  0.95,
-  0.99,
-];
+let quad_data: StaticArray<f32> = getQuad()
 
 let texture: WebGLTexture = gl.createTexture();
 let sampler: WebGLUniformLocation = gl.getUniformLocation(program, 'sampler');
+let matrixSampler: WebGLUniformLocation = gl.getUniformLocation(program, 'perspective');
+
+var matrix: StaticArray<f32> = [1.3737387097273113,0.0,0.0,0.0,0.0,1.3737387097273113,0.0,0.0,0.0,0.0,-1.02020202020202,-1.0,0.0,0.0,-2.0202020202020203,0.0]
 
 export function displayLoop(): void {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -120,6 +114,11 @@ export function displayLoop(): void {
     gl.uniform1i(sampler, 0);
     image_ready = true;
   }
+
+
+  
+  gl.uniformMatrix4fv(matrixSampler, false, matrix)
+
 
   gl.bufferData<f32>(gl.ARRAY_BUFFER, quad_data, gl.STATIC_DRAW);
 

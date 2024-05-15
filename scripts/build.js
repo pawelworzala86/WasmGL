@@ -14,11 +14,10 @@ const exec = promisify(_exec);
 // webgl.wasm into a Wasm module. Maybe later we'll have dynamic and static
 // linking, in which case maybe we'd want to ship webgl.wasm too.
 
-const ASWebGLueWasm = './src/madengine.ts';
-const ASWebGLueWasmOut = './dist/madengine.wasm';
-let ascRun = `asc ${ASWebGLueWasm} --runtime stub -O3 --importMemory -o ${ASWebGLueWasmOut}`;
+var ASWebGLueWasm = './src/madengine.ts';
+var ASWebGLueWasmOut = './dist/madengine.wasm';
+var ascRun = `asc ${ASWebGLueWasm} --runtime stub -O3 --importMemory -o ${ASWebGLueWasmOut}`;
 exec(ascRun);
-
 
 /*
 
