@@ -1220,7 +1220,8 @@ export function initASWebGLue(importObject) {
     try {
       const buffer = WebGL.memory.buffer;
       let start_pos = value_arr >> 2;
-      return WebGL.contextArray[ctx].uniformMatrix3fv(WebGL.uniformLocationArray[location], transpose,
+      //console.log(new Float32Array(buffer).subarray(start_pos, start_pos + 16));
+      return WebGL.contextArray[ctx].uniformMatrix4fv(WebGL.uniformLocationArray[location], transpose,
         new Float32Array(buffer).subarray(start_pos, start_pos + 16));
 
     } catch (err) {

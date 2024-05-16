@@ -15,23 +15,25 @@ import {
 
 import { getQuad } from './quad';
 
+import { test as testA } from './Engine';
+
+//testA()
+
 const VERTEX_SHADER_CODE: string = `#version 300 es
   precision highp float;
 
-  in vec2 position;
+  in vec3 position;
   in vec2 tex_coord;
 
-mat4 projection = mat4(1.3737387097273113,0.0,0.0,0.0,0.0,1.3737387097273113,0.0,0.0,0.0,0.0,-1.02020202020202,-1.0,0.0,0.0,-2.0202020202020203,0.0);
 mat4 camera = mat4(1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,-1.100090086,1.0);
 mat4 model = mat4(1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0);
 
-  uniform mat4 perspective;
+  uniform mat4 projection;
 
   out vec2 tc;
 
   void main() {
-    //vec4 pos = perspective*vec4(vec3(position,0.0),1.0);
-    gl_Position = projection*camera*model*vec4(vec3(position,0.0),1.0);
+    gl_Position = projection*camera*model*vec4(position,1.0);
     tc = tex_coord;
   }
 `;
@@ -90,9 +92,9 @@ let quad_data: StaticArray<f32> = getQuad()
 
 let texture: WebGLTexture = gl.createTexture();
 let sampler: WebGLUniformLocation = gl.getUniformLocation(program, 'sampler');
-let matrixSampler: WebGLUniformLocation = gl.getUniformLocation(program, 'perspective');
+let projectionSampler: WebGLUniformLocation = gl.getUniformLocation(program, 'projection');
 
-var matrix: StaticArray<f32> = [1.3737387097273113,0.0,0.0,0.0,0.0,1.3737387097273113,0.0,0.0,0.0,0.0,-1.02020202020202,-1.0,0.0,0.0,-2.0202020202020203,0.0]
+var projection_matrix: StaticArray<f32> = [1.3737387097273113,0.0,0.0,0.0,0.0,1.3737387097273113,0.0,0.0,0.0,0.0,-1.02020202020202,-1.0,0.0,0.0,-2.0202020202020203,0.0]
 
 export function displayLoop(): void {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -117,14 +119,14 @@ export function displayLoop(): void {
 
 
   
-  gl.uniformMatrix4fv(matrixSampler, false, matrix)
+  gl.uniformMatrix4fv(projectionSampler, false, projection_matrix)
 
 
   gl.bufferData<f32>(gl.ARRAY_BUFFER, quad_data, gl.STATIC_DRAW);
 
   //vertexAttribPointer     attribute |  dimensions | data type | normalize | stride bytes | offset bytes
-  gl.vertexAttribPointer(position_al, 2, gl.FLOAT, +false, 16, 0);
-  gl.vertexAttribPointer(tex_coord_al, 2, gl.FLOAT, +false, 16, 8);
+  gl.vertexAttribPointer(position_al, 3, gl.FLOAT, +false, 20, 0);
+  gl.vertexAttribPointer(tex_coord_al, 2, gl.FLOAT, +false, 20, 12);
 
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, quad_data.length / 4);
+  gl.drawArrays(gl.TRIANGLES, 0, quad_data.length / 5);
 }
