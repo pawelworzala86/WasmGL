@@ -9,11 +9,11 @@ import {
   WebGLTexture,
 } from './WebGL';
 
-import { Mesh } from './Engine';
+import { Mesh, Shader } from './Engine';
 
 //testA()
 
-const VERTEX_SHADER_CODE: string = `#version 300 es
+/*const VERTEX_SHADER_CODE: string = `#version 300 es
   precision highp float;
 
   in vec3 position;
@@ -44,7 +44,7 @@ const FRAGMENT_SHADER_CODE: string = `#version 300 es
   void main() {
     color = texture( sampler, tc );
   }
-`;
+`;*/
 
 // initialize webgl
 var gl: WebGLRenderingContext = new WebGLRenderingContext('cnvs', 'webgl2');
@@ -52,7 +52,7 @@ var gl: WebGLRenderingContext = new WebGLRenderingContext('cnvs', 'webgl2');
 //  ImageData, createImage, imageReady,
 //var image_id: ImageData = gl.createImage('kaijunicorn.png');
 //var image_ready: bool = false;
-
+/*
 let vertex_shader: WebGLShader = gl.createShader(gl.VERTEX_SHADER);
 gl.shaderSource(vertex_shader, VERTEX_SHADER_CODE);
 gl.compileShader(vertex_shader);
@@ -66,9 +66,11 @@ let program: WebGLProgram = gl.createProgram();
 gl.attachShader(program, vertex_shader);
 gl.attachShader(program, fragment_shader);
 
-gl.linkProgram(program);
+gl.linkProgram(program);*/
 
-gl.useProgram(program);
+let shader = new Shader(gl)
+
+gl.useProgram(shader.program)
 
 
 
@@ -82,7 +84,7 @@ gl.enable(gl.BLEND);
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
 
-let mesh:Mesh = new Mesh(gl, program);
+let mesh:Mesh = new Mesh(gl, shader);
 //let quad_data: StaticArray<f32> = getQuad()
 
 
@@ -92,7 +94,7 @@ let mesh:Mesh = new Mesh(gl, program);
 //let projectionSampler: WebGLUniformLocation = gl.getUniformLocation(program, 'projection');
 
 let projection_matrix: StaticArray<f32> = [1.3737387097273113,0.0,0.0,0.0,0.0,1.3737387097273113,0.0,0.0,0.0,0.0,-1.02020202020202,-1.0,0.0,0.0,-2.0202020202020203,0.0]
-let camera_matrix: StaticArray<f32> = [1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,-1.100090086,1.0]
+let camera_matrix: StaticArray<f32> = [1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,-10.100090086,1.0]
 
 //let buffer: WebGLBuffer = gl.createBuffer();
 //gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
