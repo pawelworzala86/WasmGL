@@ -19,10 +19,10 @@ const VERTEX_SHADER_CODE: string = `#version 300 es
   in vec3 position;
   in vec2 tex_coord;
 
-mat4 camera = mat4(1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,-1.100090086,1.0);
 mat4 model = mat4(1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0);
 
   uniform mat4 projection;
+  uniform mat4 camera;
 
   out vec2 tc;
 
@@ -91,8 +91,8 @@ let mesh:Mesh = new Mesh(gl, program);
 //let sampler: WebGLUniformLocation = gl.getUniformLocation(program, 'sampler');
 //let projectionSampler: WebGLUniformLocation = gl.getUniformLocation(program, 'projection');
 
-//var projection_matrix: StaticArray<f32> = [1.3737387097273113,0.0,0.0,0.0,0.0,1.3737387097273113,0.0,0.0,0.0,0.0,-1.02020202020202,-1.0,0.0,0.0,-2.0202020202020203,0.0]
-
+let projection_matrix: StaticArray<f32> = [1.3737387097273113,0.0,0.0,0.0,0.0,1.3737387097273113,0.0,0.0,0.0,0.0,-1.02020202020202,-1.0,0.0,0.0,-2.0202020202020203,0.0]
+let camera_matrix: StaticArray<f32> = [1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,-1.100090086,1.0]
 
 //let buffer: WebGLBuffer = gl.createBuffer();
 //gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -119,7 +119,7 @@ export function displayLoop(): void {
     gl.uniform1i(sampler, 0);
     image_ready = true;
   }*/
-  mesh.render()
+  mesh.render(projection_matrix, camera_matrix)
 
 
   

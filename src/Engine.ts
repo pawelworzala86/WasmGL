@@ -22,7 +22,8 @@ export class Mesh{
     public texture: WebGLTexture
     public sampler: WebGLUniformLocation
     public projectionSampler: WebGLUniformLocation
-    public projection_matrix: StaticArray<f32>
+    public cameraSampler: WebGLUniformLocation
+    //public projection_matrix: StaticArray<f32>
     public buffer: WebGLBuffer
     public bufferReady: bool
     public position_al: GLint
@@ -36,7 +37,8 @@ export class Mesh{
         this.texture = gl.createTexture();
         this.sampler = gl.getUniformLocation(program, 'sampler');
         this.projectionSampler = gl.getUniformLocation(program, 'projection');
-        this.projection_matrix = [1.3737387097273113,0.0,0.0,0.0,0.0,1.3737387097273113,0.0,0.0,0.0,0.0,-1.02020202020202,-1.0,0.0,0.0,-2.0202020202020203,0.0]
+        this.cameraSampler = gl.getUniformLocation(program, 'camera');
+        //this.projection_matrix = [1.3737387097273113,0.0,0.0,0.0,0.0,1.3737387097273113,0.0,0.0,0.0,0.0,-1.02020202020202,-1.0,0.0,0.0,-2.0202020202020203,0.0]
         this.buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
         this.bufferReady = false
@@ -45,7 +47,7 @@ export class Mesh{
         this.tex_coord_al = gl.getAttribLocation(program, 'tex_coord');
         gl.enableVertexAttribArray(this.tex_coord_al);
     }
-    render():void{
+    render(projection_matrix: StaticArray<f32>, camera_matrix: StaticArray<f32>):void{
         let gl:WebGLRenderingContext = this.gl
         if (this.image_ready == false) {
             if (this.gl.imageReady(this.image_id) == false) {
@@ -64,7 +66,8 @@ export class Mesh{
             this.image_ready = true;
         }
 
-        gl.uniformMatrix4fv(this.projectionSampler, false, this.projection_matrix)
+        gl.uniformMatrix4fv(this.projectionSampler, false, projection_matrix)
+        gl.uniformMatrix4fv(this.cameraSampler, false, camera_matrix)
 
         if(!this.bufferReady){
             gl.bufferData<f32>(gl.ARRAY_BUFFER, this.data, gl.STATIC_DRAW);
