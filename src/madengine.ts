@@ -1,7 +1,3 @@
-/**
- * @author Rick Battagline / https://embed.com
- */
-
 import {
   WebGLRenderingContext,
   WebGLShader,
@@ -13,9 +9,7 @@ import {
   WebGLTexture,
 } from './WebGL';
 
-import { getQuad } from './quad';
-
-import { test as testA } from './Engine';
+import { Mesh } from './Engine';
 
 //testA()
 
@@ -56,8 +50,8 @@ const FRAGMENT_SHADER_CODE: string = `#version 300 es
 var gl: WebGLRenderingContext = new WebGLRenderingContext('cnvs', 'webgl2');
 
 //  ImageData, createImage, imageReady,
-var image_id: ImageData = gl.createImage('kaijunicorn.png');
-var image_ready: bool = false;
+//var image_id: ImageData = gl.createImage('kaijunicorn.png');
+//var image_ready: bool = false;
 
 let vertex_shader: WebGLShader = gl.createShader(gl.VERTEX_SHADER);
 gl.shaderSource(vertex_shader, VERTEX_SHADER_CODE);
@@ -76,31 +70,40 @@ gl.linkProgram(program);
 
 gl.useProgram(program);
 
-let buffer: WebGLBuffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-let position_al: GLint = gl.getAttribLocation(program, 'position');
+
+/*let position_al: GLint = gl.getAttribLocation(program, 'position');
 gl.enableVertexAttribArray(position_al);
 
 let tex_coord_al: GLint = gl.getAttribLocation(program, 'tex_coord');
-gl.enableVertexAttribArray(tex_coord_al);
+gl.enableVertexAttribArray(tex_coord_al);*/
 
 gl.enable(gl.BLEND);
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-let quad_data: StaticArray<f32> = getQuad()
 
-let texture: WebGLTexture = gl.createTexture();
-let sampler: WebGLUniformLocation = gl.getUniformLocation(program, 'sampler');
-let projectionSampler: WebGLUniformLocation = gl.getUniformLocation(program, 'projection');
+let mesh:Mesh = new Mesh(gl, program);
+//let quad_data: StaticArray<f32> = getQuad()
 
-var projection_matrix: StaticArray<f32> = [1.3737387097273113,0.0,0.0,0.0,0.0,1.3737387097273113,0.0,0.0,0.0,0.0,-1.02020202020202,-1.0,0.0,0.0,-2.0202020202020203,0.0]
+
+
+//let texture: WebGLTexture = gl.createTexture();
+//let sampler: WebGLUniformLocation = gl.getUniformLocation(program, 'sampler');
+//let projectionSampler: WebGLUniformLocation = gl.getUniformLocation(program, 'projection');
+
+//var projection_matrix: StaticArray<f32> = [1.3737387097273113,0.0,0.0,0.0,0.0,1.3737387097273113,0.0,0.0,0.0,0.0,-1.02020202020202,-1.0,0.0,0.0,-2.0202020202020203,0.0]
+
+
+//let buffer: WebGLBuffer = gl.createBuffer();
+//gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+//gl.bufferData<f32>(gl.ARRAY_BUFFER, quad_data, gl.STATIC_DRAW);
+//let bufferReady = false
 
 export function displayLoop(): void {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  if (image_ready == false) {
+  /*if (image_ready == false) {
     if (gl.imageReady(image_id) == false) {
       return;
     }
@@ -115,18 +118,21 @@ export function displayLoop(): void {
 
     gl.uniform1i(sampler, 0);
     image_ready = true;
-  }
+  }*/
+  mesh.render()
 
 
   
-  gl.uniformMatrix4fv(projectionSampler, false, projection_matrix)
+  /*gl.uniformMatrix4fv(projectionSampler, false, projection_matrix)
 
-
-  gl.bufferData<f32>(gl.ARRAY_BUFFER, quad_data, gl.STATIC_DRAW);
+  if(!bufferReady){
+    gl.bufferData<f32>(gl.ARRAY_BUFFER, mesh.data, gl.STATIC_DRAW);
+    bufferReady=true
+  }
 
   //vertexAttribPointer     attribute |  dimensions | data type | normalize | stride bytes | offset bytes
   gl.vertexAttribPointer(position_al, 3, gl.FLOAT, +false, 20, 0);
   gl.vertexAttribPointer(tex_coord_al, 2, gl.FLOAT, +false, 20, 12);
 
-  gl.drawArrays(gl.TRIANGLES, 0, quad_data.length / 5);
+  gl.drawArrays(gl.TRIANGLES, 0, mesh.data.length / 5);*/
 }
