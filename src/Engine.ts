@@ -80,8 +80,12 @@ export class Mesh{
 
         //vertexAttribPointer     attribute |  dimensions | data type | normalize | stride bytes | offset bytes
         gl.vertexAttribPointer(this.position_al, 3, gl.FLOAT, +false, 32, 0);
-        gl.vertexAttribPointer(this.normal_al, 3, gl.FLOAT, +false, 32, 12);
-        gl.vertexAttribPointer(this.tex_coord_al, 2, gl.FLOAT, +false, 32, 24);
+        if(this.normal_al>-1){
+          gl.vertexAttribPointer(this.normal_al, 3, gl.FLOAT, +false, 32, 12);
+        }
+        if(this.tex_coord_al>-1){
+          gl.vertexAttribPointer(this.tex_coord_al, 2, gl.FLOAT, +false, 32, 24);
+        }
 
         gl.drawArrays(gl.TRIANGLES, 0, this.data.length / 8);
     }
